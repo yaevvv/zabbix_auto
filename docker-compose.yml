@@ -1,0 +1,12 @@
+version: '3'
+services:
+    zab:
+        image: shut2000/gin_zabbix:latest
+        container_name: zab
+        ports:
+            - 8088:80
+        environment:
+            DB_PASS: "Qwerty123"
+        #volumes:
+        #    - /Users/macuser/Documents/Zabbix:/etc/zabbix/web
+             

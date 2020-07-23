@@ -1,0 +1,30 @@
+---
+
+stages:
+  - build
+
+image: docker
+services:
+- docker:dind
+
+.dev_env: &prod_env
+  environment: prod
+  variables:
+    env_tag: 'prod'
+  only:
+    - master
+
+variables:
+  GIT_SSL_NO_VERIFY: "true"
+  container_image: "gin_zabbix"
+  my_registry: "shut2000"
+
+build:
+  stage: build
+  <<: *prod_env
+  script:
+    - docker login -u "shut2000" --password "${REG_PASS}"
+    #"2a1a2da0-34ae-4e04-8b0e-8b0ebdd980ff" docker.io
+    - docker build -t "${container_image}" .
+    - docker tag "${container_image}" "${my_registry}"/"${container_image}":"latest"
+    - docker push "${my_registry}"/"${container_image}":"latest"

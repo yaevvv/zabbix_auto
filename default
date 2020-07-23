@@ -1,0 +1,26 @@
+server {
+	listen 80 default_server;
+
+	# SSL configuration
+	#
+	# listen 443 ssl default_server;
+
+	root /usr/share/zabbix;
+
+	server_name _;
+
+	location / {
+		index index.php;
+	}
+
+	location ~ \.php$ {
+		set $root_path /usr/share/zabbix;
+		fastcgi_buffer_size 32k;
+		fastcgi_buffers 4 32k;
+		fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $root_path$fastcgi_script_name;
+		include fastcgi_params;
+		fastcgi_param DOCUMENT_ROOT $root_path;
+}
+}
